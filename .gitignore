@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Project brain files (contain personal LinkedIn URL and context)
+CLAUDE.md
+AGENTS.md
+
+# All personal data (scraped profiles, posts, jobs, engagement logs)
+data/
+
+# Targets contain peer LinkedIn URLs and names
+config/targets.json
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# Reports contain personal benchmark data and unrelated Maya test artifacts
+reports/
+
+# Netlify
+.netlify

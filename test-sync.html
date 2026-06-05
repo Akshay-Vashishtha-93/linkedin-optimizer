@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LinkedIn Optimizer Sync Test</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;margin:24px;background:#f6f8fb;color:#17212f}
+    button{padding:8px 14px;border:0;border-radius:6px;background:#0a66c2;color:white;font-weight:700;cursor:pointer}
+    pre{background:white;border:1px solid #d9e2ec;border-radius:8px;padding:16px;white-space:pre-wrap;max-height:70vh;overflow:auto}
+  </style>
+</head>
+<body>
+  <h2>Backend Sync Test</h2>
+  <p>This page calls the local backend. It does not contain Apify or LLM tokens.</p>
+  <button onclick="run('profile')">Run Profile</button>
+  <button onclick="run('jobs')">Run Jobs</button>
+  <button onclick="state()">Load State</button>
+  <pre id="log"></pre>
+  <script>
+    const log = (value) => {
+      document.getElementById('log').textContent += `${typeof value === 'string' ? value : JSON.stringify(value, null, 2)}\n\n`;
+    };
+    async function run(skill) {
+      log(`POST /api/skills/${skill}/run`);
+      const response = await fetch(`/api/skills/${skill}/run`, {method:'POST'});
+      log(await response.json());
+    }
+    async function state() {
+      log('GET /api/dashboard/state');
+      const response = await fetch('/api/dashboard/state');
+      log(await response.json());
+    }
+  </script>
+</body>
+</html>

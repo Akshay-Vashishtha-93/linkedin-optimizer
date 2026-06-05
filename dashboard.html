@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LinkedIn Optimizer</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;--panel:#fff;--ink:#142033;--muted:#5b6778;--line:#d9e2ec;
+      --blue:#0a66c2;--blue2:#074a8d;--green:#0f8a5f;--orange:#b85d00;--red:#b42318;
+      --purple:#6f42c1;--soft-blue:#eaf3fc;--soft-green:#e9f7f1;--soft-orange:#fff3e3;--soft-red:#fdebea;
+      --shadow:0 8px 24px rgba(20,32,51,.08)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:14px}
+    button,a{font:inherit}
+    .shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .side{background:#101828;color:#fff;padding:20px 16px;position:sticky;top:0;height:100vh;overflow:auto}
+    .brand{padding:4px 8px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:16px}
+    .brand h1{font-size:18px;margin:0 0 12px}
+    .score{display:flex;align-items:end;gap:8px}
+    .score strong{font-size:44px;line-height:1}
+    .score span{color:#cbd5e1;margin-bottom:6px}
+    .sub{color:#cbd5e1;font-size:12px;margin-top:8px;line-height:1.5}
+    .nav-title{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#98a2b3;margin:18px 8px 8px}
+    .nav button{width:100%;border:0;background:transparent;color:#d0d5dd;border-radius:8px;text-align:left;padding:10px 10px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+    .nav button:hover,.nav button.active{background:rgba(255,255,255,.1);color:#fff}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;background:#eef2f6;color:#344054}
+    .pill.fresh{background:var(--soft-green);color:var(--green)}
+    .pill.stale,.pill.expired{background:var(--soft-orange);color:var(--orange)}
+    .pill.unknown{background:#eef2f6;color:#667085}
+    .pill.error{background:var(--soft-red);color:var(--red)}
+    .main{padding:22px 28px 48px;min-width:0}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .topbar h2{margin:0;font-size:24px;letter-spacing:0}
+    .topbar p{margin:5px 0 0;color:var(--muted)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .btn{border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:7px;padding:8px 13px;font-weight:700;cursor:pointer;white-space:nowrap}
+    .btn:hover{background:var(--blue2)}
+    .btn.secondary{background:#fff;color:var(--blue)}
+    .btn.warn{background:var(--orange);border-color:var(--orange)}
+    .btn:disabled{opacity:.55;cursor:wait}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:16px;min-width:0}
+    .span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-6{grid-column:span 6}.span-4{grid-column:span 4}.span-3{grid-column:span 3}
+    .panel h3{font-size:14px;margin:0 0 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+    .kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}
+    .kpi .num{font-size:28px;font-weight:800;line-height:1;margin-bottom:5px}
+    .kpi .label{font-size:12px;color:var(--muted)}
+    .status{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr;gap:10px;margin-bottom:14px}
+    .status div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px}
+    .status small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
+    .status strong{font-size:13px}
+    .list{display:grid;gap:10px}
+    .item{border:1px solid var(--line);border-radius:8px;background:#fff;padding:13px}
+    .item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+    .item-title{font-weight:800;color:var(--ink)}
+    .item-meta{font-size:12px;color:var(--muted);margin-top:3px}
+    .item p{margin:8px 0;color:#344054;line-height:1.55}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .tag{font-size:11px;border-radius:999px;background:#eef2f6;color:#344054;padding:3px 7px}
+    .tag.green{background:var(--soft-green);color:var(--green)}.tag.orange{background:var(--soft-orange);color:var(--orange)}.tag.red{background:var(--soft-red);color:var(--red)}.tag.purple{background:#f1ebff;color:var(--purple)}
+    .evidence{font-size:11px;color:var(--muted);background:#f8fafc;border:1px dashed var(--line);border-radius:6px;padding:8px;margin-top:10px}
+    .draft{white-space:pre-line;background:#f8fafc;border:1px solid var(--line);border-radius:7px;padding:10px;color:#1f2937;margin-top:8px}
+    .score-row{display:grid;grid-template-columns:190px 1fr 44px;gap:10px;align-items:center;margin:9px 0}
+    .bar{height:9px;background:#edf2f7;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--blue)}.fill.low{background:var(--red)}.fill.mid{background:var(--orange)}.fill.high{background:var(--green)}
+    table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid var(--line);text-align:left;padding:8px 6px;vertical-align:top}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+    .alerts{display:grid;gap:8px}.alert{border-radius:8px;padding:10px;border:1px solid var(--line);background:#fff;color:#344054}.alert.warn{background:var(--soft-orange);border-color:#ffd199;color:#7a3d00}.alert.err{background:var(--soft-red);border-color:#f7b7b0;color:var(--red)}
+    .empty{padding:26px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:8px;background:#fff}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+    @media(max-width:980px){.shell{grid-template-columns:1fr}.side{position:static;height:auto}.main{padding:18px}.span-8,.span-6,.span-4,.span-3{grid-column:span 12}.kpis,.status{grid-template-columns:1fr 1fr}.topbar{align-items:flex-start;flex-direction:column}}
+    @media(max-width:560px){.kpis,.status{grid-template-columns:1fr}.item-head{display:block}.score-row{grid-template-columns:1fr 1fr}.score-row .bar{grid-column:1/3}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <h1>LinkedIn Optimizer</h1>
+      <div class="score"><strong id="nav-score">--</strong><span>/10</span></div>
+      <div class="sub" id="nav-sub">Loading verified dashboard state...</div>
+    </div>
+    <div class="nav">
+      <div class="nav-title">Daily</div>
+      <button data-tab="overview" class="active">Overview <span id="dot-overview" class="pill unknown">state</span></button>
+      <button data-tab="engage">Engage <span id="dot-engage" class="pill unknown">state</span></button>
+      <button data-tab="content">Content <span id="dot-content" class="pill unknown">state</span></button>
+      <div class="nav-title">Weekly</div>
+      <button data-tab="profile">Profile <span id="dot-profile" class="pill unknown">state</span></button>
+      <button data-tab="jobs">Jobs <span id="dot-jobs" class="pill unknown">state</span></button>
+      <button data-tab="network">Network <span id="dot-network" class="pill unknown">state</span></button>
+      <button data-tab="watch">Watch <span id="dot-watch" class="pill unknown">state</span></button>
+      <div class="nav-title">Discover</div>
+      <button data-tab="topics">Topics <span id="dot-topics" class="pill unknown">state</span></button>
+      <button data-tab="discover">Anchors <span id="dot-discover" class="pill unknown">state</span></button>
+      <div class="nav-title">Track</div>
+      <button data-tab="scorecard">Scorecard <span id="dot-scorecard" class="pill unknown">state</span></button>
+      <button data-tab="runs">Runs <span class="pill unknown">logs</span></button>
+    </div>
+  </aside>
+  <main class="main" id="app"></main>
+</div>
+
+<script>
+let STATE=null;
+let ACTIVE='overview';
+const SKILLS=['profile','jobs','network','content','engage','watch','scorecard','topics','discover'];
+const TAB_LABEL={overview:'Overview',profile:'Profile',jobs:'Jobs',network:'Network',content:'Content',engage:'Engage',watch:'Watch',scorecard:'Scorecard',topics:'Topics',discover:'Anchors',runs:'Runs'};
+const TAB_DESC={
+  overview:'Verified state across profile, content, jobs, network and scorecard.',
+  profile:'Canonical profile score, dimensions, peer context and exact manual actions.',
+  jobs:'Ranked PM roles with fit scores, reasons, risk flags, outreach and referral targets.',
+  network:'Prioritized people to connect with based on profile, jobs, peers and target companies.',
+  content:'Verified inspiration, draft starters, calendar and anti-slop validation.',
+  engage:'Fresh target posts and evidence-backed comment drafts.',
+  watch:'Competitor and peer signals with evidence coverage checks.',
+  scorecard:'Weekly operating view with stale/manual metrics clearly labeled.',
+  topics:'Trending topics from web search, clustered by your content pillars.',
+  discover:'Rotating anchor discovery — new people to follow and engage with.',
+  runs:'Recorded backend skill runs and validation output.'
+};
+const H=(value)=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct=(value,total=10)=>Math.max(0,Math.min(100,(Number(value||0)/total)*100));
+const statusClass=(s)=>['fresh','stale','expired','unknown'].includes(s)?s:'unknown';
+const scoreClass=(v)=>v>=7?'high':v>=5?'mid':'low';
+const ago=(iso)=>{if(!iso)return'unknown';const t=new Date(iso).getTime();if(!t)return'unknown';const m=Math.floor((Date.now()-t)/60000);if(m<60)return`${m}m ago`;if(m<1440)return`${Math.floor(m/60)}h ago`;return`${Math.floor(m/1440)}d ago`};
+
+async function loadState(){
+  const response=await fetch('/api/dashboard/state',{cache:'no-store'});
+  STATE=await response.json();
+  updateNav();
+  render();
+}
+
+async function runSkill(skill,btn){
+  btn.disabled=true;
+  btn.textContent='Running...';
+  try{
+    const response=await fetch(`/api/skills/${skill}/run`,{method:'POST',headers:{'Content-Type':'application/json'}});
+    const payload=await response.json();
+    await loadState();
+    if(payload.run?.run_id){ACTIVE=skill; render();}
+  }catch(err){
+    document.getElementById('app').insertAdjacentHTML('afterbegin',`<div class="alert err">Run failed: ${H(err.message)}</div>`);
+  }finally{
+    btn.disabled=false;
+    btn.textContent=`Run ${TAB_LABEL[skill]||skill}`;
+  }
+}
+
+async function logAction(type,target,detail){
+  await fetch('/api/manual/log',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type,target,detail})});
+  await loadState();
+}
+
+function updateNav(){
+  const profile=STATE?.skills?.profile||{};
+  const score=profile.score?.overall_score;
+  document.getElementById('nav-score').textContent=score?score.toFixed(1):'--';
+  const b=STATE.budget||{};
+  const budgetTxt=b.is_exhausted?'EXHAUSTED':`$${b.usage_usd??0} / $${b.limit_usd??29} (${b.pct_used??0}%)`;
+  document.getElementById('nav-sub').textContent=`LLM: ${STATE.llm_available?'available':'fallback'} · Apify: ${budgetTxt}${b.plan&&b.plan!=='unknown'?' ['+b.plan+']':''}`;
+  for(const skill of SKILLS){
+    const data=STATE.skills?.[skill]||{};
+    const dot=document.getElementById(`dot-${skill}`);
+    if(dot){dot.className=`pill ${statusClass(data.freshness_status)}`;dot.textContent=data.freshness_status||'unknown'}
+  }
+}
+
+document.querySelectorAll('.nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');ACTIVE=btn.dataset.tab;render();});
+});
+
+function runButton(skill){return `<button class="btn" onclick="runSkill('${skill}',this)">Run ${TAB_LABEL[skill]||skill}</button>`}
+function secondaryLink(label,url){return url?`<a class="btn secondary" href="${H(url)}" target="_blank" rel="noopener">${H(label)}</a>`:''}
+
+function renderTop(skill){
+  const title=TAB_LABEL[ACTIVE]||'Dashboard';
+  const desc=TAB_DESC[ACTIVE]||'';
+  const action=SKILLS.includes(skill)?runButton(skill):`<button class="btn secondary" onclick="loadState()">Refresh State</button>`;
+  return `<div class="topbar"><div><h2>${H(title)}</h2><p>${H(desc)}</p></div><div class="actions">${action}</div></div>`;
+}
+
+function statusBar(data){
+  return `<div class="status">
+    <div><small>Freshness</small><strong><span class="pill ${statusClass(data.freshness_status)}">${H(data.freshness_status||'unknown')}</span></strong></div>
+    <div><small>Coverage</small><strong>${Math.round((data.coverage||0)*100)}%</strong></div>
+    <div><small>Generated</small><strong>${H(ago(data.generated_at))}</strong></div>
+    <div><small>Run ID</small><strong class="mono">${H(data.run_id||'bootstrap')}</strong></div>
+  </div>${alerts(data)}`;
+}
+
+function alerts(data){
+  const warnings=[...new Set([...(data.warnings||[]),...(data.validation?.warnings||[])])];
+  const errors=[...new Set([...(data.errors||[]),...(data.validation?.errors||[])])];
+  if(!warnings.length&&!errors.length)return'';
+  return `<div class="alerts">${errors.map(e=>`<div class="alert err">${H(e)}</div>`).join('')}${warnings.map(w=>`<div class="alert warn">${H(w)}</div>`).join('')}</div>`;
+}
+
+function evidence(ev){
+  if(!ev)return'';
+  const fields=(ev.verified_fields||[]).slice(0,6).join(', ');
+  const unknown=(ev.unknown_fields||[]).slice(0,6).join(', ');
+  return `<div class="evidence">
+    Evidence: ${H(ev.source_type)} · ${H(ev.freshness_status)} · confidence ${Math.round((ev.confidence||0)*100)}%<br>
+    Verified: ${H(fields||'none')} ${unknown?`<br>Unknown: ${H(unknown)}`:''}
+    ${ev.raw_path?`<br>Raw: <span class="mono">${H(ev.raw_path)}</span>`:''}
+  </div>`;
+}
+
+function render(){
+  if(!STATE){document.getElementById('app').innerHTML='<div class="empty">Loading...</div>';return}
+  if(ACTIVE==='overview')return renderOverview();
+  if(ACTIVE==='runs')return renderRuns();
+  const data=STATE.skills?.[ACTIVE]||{};
+  const map={profile:renderProfile,jobs:renderJobs,network:renderNetwork,content:renderContent,engage:renderEngage,watch:renderWatch,scorecard:renderScorecard,topics:renderTopics,discover:renderDiscover};
+  document.getElementById('app').innerHTML=renderTop(ACTIVE)+statusBar(data)+(map[ACTIVE]?map[ACTIVE](data):'<div class="empty">No renderer.</div>');
+}
+
+function renderOverview(){
+  const s=STATE.skills;
+  const profile=s.profile||{}, jobs=s.jobs||{}, network=s.network||{}, engage=s.engage||{}, content=s.content||{}, scorecard=s.scorecard||{};
+  document.getElementById('app').innerHTML=renderTop('overview')+`
+    <div class="kpis">
+      <div class="kpi"><div class="num">${H(profile.score?.overall_score??'--')}</div><div class="label">Canonical profile score</div></div>
+      <div class="kpi"><div class="num">${H(jobs.items?.length??0)}</div><div class="label">Ranked jobs</div></div>
+      <div class="kpi"><div class="num">${H(network.items?.length??0)}</div><div class="label">Network targets</div></div>
+      <div class="kpi"><div class="num">${H(engage.items?.length??0)}</div><div class="label">Comment opportunities</div></div>
+    </div>
+    <div class="grid">
+      ${summaryPanel('Profile',profile,'profile')}
+      ${summaryPanel('Jobs',jobs,'jobs')}
+      ${summaryPanel('Network',network,'network')}
+      ${summaryPanel('Content',content,'content')}
+      ${summaryPanel('Engage',engage,'engage')}
+      ${summaryPanel('Scorecard',scorecard,'scorecard')}
+    </div>`;
+}
+
+function summaryPanel(label,data,tab){
+  return `<div class="panel span-4"><h3>${H(label)} <span class="pill ${statusClass(data.freshness_status)}">${H(data.freshness_status||'unknown')}</span></h3>
+    <p>${H(data.summary||'No verified summary yet.')}</p>
+    <div class="tags"><span class="tag">Coverage ${Math.round((data.coverage||0)*100)}%</span>${(data.validation?.warnings||data.warnings||[]).slice(0,2).map(w=>`<span class="tag orange">${H(w)}</span>`).join('')}</div>
+    <div class="actions" style="margin-top:12px"><button class="btn secondary" onclick="ACTIVE='${tab}';document.querySelector('[data-tab=${tab}]').click()">Open</button>${SKILLS.includes(tab)?runButton(tab):''}</div>
+  </div>`;
+}
+
+function renderProfile(data){
+  const score=data.score||{};
+  const dims=score.dimensions||{};
+  return `<div class="grid">
+    <div class="panel span-4"><h3>Profile</h3>
+      <div class="kpi"><div class="num">${H(score.overall_score??'--')}</div><div class="label">Canonical score</div></div>
+      <p>${H(data.profile?.headline||'No headline verified')}</p>
+      <div class="tags"><span class="tag">Connections ${H(data.profile?.connections??'unknown')}</span><span class="tag">Followers ${H(data.profile?.followers??'unknown')}</span><span class="tag ${data.profile?.creator?'green':'orange'}">Creator ${data.profile?.creator?'on':'off'}</span></div>
+      ${evidence(data.evidence?.[0])}
+    </div>
+    <div class="panel span-8"><h3>10 Dimensions <span class="pill">${H(score.method||'canonical')}</span></h3>
+      ${Object.entries(score.dimension_labels||{}).map(([key,label])=>`<div class="score-row"><div>${H(label)}</div><div class="bar"><div class="fill ${scoreClass(dims[key])}" style="width:${pct(dims[key])}%"></div></div><strong>${H(dims[key]??'--')}</strong></div>`).join('')}
+    </div>
+    <div class="panel span-6"><h3>Exact Actions</h3><div class="list">${(data.actions||[]).map(a=>`<div class="item"><div class="item-title">${H(a.title)}</div><div class="item-meta">${H(a.impact)} · ${H(a.status)}</div><p>${H(a.reason)}</p></div>`).join('')}</div></div>
+    <div class="panel span-6"><h3>Peer Context</h3><div style="overflow:auto"><table><thead><tr><th>Name</th><th>Company</th><th>Followers</th><th>Creator</th></tr></thead><tbody>${(data.peers||[]).slice(0,12).map(p=>`<tr><td>${H(p.name)}</td><td>${H(p.company)}</td><td>${H(p.followers??'--')}</td><td>${p.creator?'Yes':'No'}</td></tr>`).join('')}</tbody></table></div></div>
+  </div>`;
+}
+
+function renderJobs(data){
+  const items=data.items||[];
+  return `<div class="list">${items.length?items.map(job=>`<div class="item">
+    <div class="item-head"><div><div class="item-title">${H(job.title)}</div><div class="item-meta">${H(job.company)} · ${H(job.location)} · ${H(job.fit_level)} (${H(job.fit_score)}/100)</div></div><div class="actions">${secondaryLink('View job',job.url)}</div></div>
+    <p>${H(job.description)}</p>
+    <div class="tags">${(job.reasons||[]).map(r=>`<span class="tag green">${H(r)}</span>`).join('')}${(job.risk_flags||[]).map(r=>`<span class="tag red">${H(r)}</span>`).join('')}${(job.domain_matches||[]).slice(0,5).map(r=>`<span class="tag purple">${H(r)}</span>`).join('')}</div>
+    <div class="draft">${H(job.outreach_draft)}</div>
+    <div class="actions" style="margin-top:10px">${(job.referral_targets||[]).map(t=>secondaryLink(t.label,t.url)).join('')}<button class="btn secondary" onclick="logAction('job','${H(job.company)}','${H(job.title)}')">Log review</button></div>
+    ${evidence(job.evidence)}
+  </div>`).join(''):'<div class="empty">No verified matching jobs. Run Jobs to scrape and rank fresh roles.</div>'}</div>`;
+}
+
+function renderNetwork(data){
+  const items=data.items||[];
+  return `<div class="list">${items.length?items.map(person=>`<div class="item">
+    <div class="item-head"><div><div class="item-title">${H(person.name)}</div><div class="item-meta">${H(person.role)} · ${H(person.company)} · score ${H(person.fit_score)}/100</div></div><div class="actions">${secondaryLink('Open profile',person.url)}</div></div>
+    <p>${H(person.why_this_person)}</p>
+    <div class="tags">${(person.reasons||[]).map(r=>`<span class="tag green">${H(r)}</span>`).join('')}</div>
+    <p><strong>Path:</strong> ${H(person.connection_path)}</p>
+    <div class="draft">${H(person.connection_note)}</div>
+    <div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="logAction('connection','${H(person.name)}','${H(person.company)}')">Log connection</button></div>
+    ${evidence(person.evidence)}
+  </div>`).join(''):'<div class="empty">No verified network targets. Run Network to build targets from jobs, peers and engagement signals.</div>'}</div>`;
+}
+
+function renderContent(data){
+  const items=data.items||[];
+  return `<div class="grid">
+    <div class="panel span-4"><h3>Posting Calendar</h3><div class="list">${(data.calendar||[]).map(c=>`<div class="item"><div class="item-title">${H(c.day)} · ${H(c.type)}</div><div class="item-meta">${H(c.pillar)}</div><p>${H(c.topic)}</p></div>`).join('')}</div></div>
+    <div class="panel span-8"><h3>Verified Inspiration</h3><div class="list">${items.length?items.map(item=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(item.author||'Unknown')}</div><div class="item-meta">engagement score ${H(item.engagement_score)}</div></div>${secondaryLink('Open',item.url)}</div><p>${H(item.summary)}</p><div class="tags">${(item.relevance_reasons||[]).map(r=>`<span class="tag green">${H(r)}</span>`).join('')}</div><div class="draft">${H(item.draft)}</div>${evidence(item.evidence)}</div>`).join(''):'<div class="empty">No relevant inspiration passed validation. Run Content for fresh source coverage.</div>'}</div></div>
+  </div>`;
+}
+
+function renderEngage(data){
+  const items=data.items||[];
+  return `<div class="list">${items.length?items.map(item=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(item.author)}</div><div class="item-meta">${(item.relevance_reasons||[]).join(', ')}</div></div>${secondaryLink('Open post',item.url)}</div><p>${H(item.post_summary)}</p><div class="draft">${H(item.comment_draft)}</div><div class="actions" style="margin-top:10px"><button class="btn secondary" onclick="navigator.clipboard.writeText(${JSON.stringify(item.comment_draft||'')})">Copy comment</button><button class="btn secondary" onclick="logAction('comment','${H(item.author)}','${H(item.id)}')">Log comment</button></div>${evidence(item.evidence)}</div>`).join(''):'<div class="empty">No fresh relevant posts. Run Engage to scrape current target posts.</div>'}</div>`;
+}
+
+function renderWatch(data){
+  const items=data.items||[];
+  return `<div class="panel span-12"><h3>Digest</h3><p>${H(data.summary)}</p></div><div class="list" style="margin-top:14px">${items.length?items.map(item=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(item.author||'Unknown')}</div><div class="item-meta">${(item.signals||[]).join(', ')}</div></div>${secondaryLink('Open',item.url)}</div><p>${H(item.summary)}</p>${evidence(item.evidence)}</div>`).join(''):'<div class="empty">Insufficient verified evidence for a confident digest.</div>'}</div>`;
+}
+
+function renderScorecard(data){
+  const m=data.metrics||{};
+  return `<div class="kpis">
+    <div class="kpi"><div class="num">${H(m.profile_score??'--')}</div><div class="label">Profile score</div></div>
+    <div class="kpi"><div class="num">${H(m.jobs_ranked??0)}</div><div class="label">Jobs ranked</div></div>
+    <div class="kpi"><div class="num">${H(m.network_targets??0)}</div><div class="label">Network targets</div></div>
+    <div class="kpi"><div class="num">${H(m.comments_logged??0)}</div><div class="label">Logged comments</div></div>
+  </div>
+  <div class="grid"><div class="panel span-8"><h3>Verdict</h3><p>${H(data.summary)}</p><div class="draft">${H(data.next_action||'No next action generated.')}</div>${evidence(data.evidence?.[0])}</div>
+  <div class="panel span-4"><h3>Stale / Manual Metrics</h3><div class="tags">${(m.stale_sections||[]).map(s=>`<span class="tag orange">${H(s)}</span>`).join('')||'<span class="tag green">No stale sections listed</span>'}<span class="tag orange">Manual impressions unknown</span><span class="tag orange">Profile views unknown</span></div></div></div>`;
+}
+
+function renderTopics(data){
+  const items=data.items||[];
+  if(!items.length)return '<div class="empty">No trending topics found. Run Topics to scan the web.</div>';
+  return `<div class="list">${items.map(t=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(t.title||t.topic)}</div><div class="item-meta">${H(t.pillar||'')} · Relevance: ${H(t.relevance_score||t.score||'?')}/10</div></div><span class="pill ${(t.relevance_score||0)>=7?'fresh':'stale'}">${H(t.cluster||t.theme||'topic')}</span></div><p>${H(t.why_trending||t.snippet||'')}</p>${t.suggested_angle?`<div class="draft">${H(t.suggested_angle)}</div>`:''}<div class="tags">${(t.source_urls||t.sources||[]).slice(0,3).map(u=>`<a href="${H(u)}" target="_blank" class="tag blue">${H(new URL(u).hostname)}</a>`).join('')}</div></div>`).join('')}</div>`;
+}
+
+function renderDiscover(data){
+  const items=data.items||[];
+  if(!items.length)return '<div class="empty">No rotating anchors discovered. Run Anchors to search.</div>';
+  return `<div class="list">${items.map(p=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(p.name||'Unknown')}</div><div class="item-meta">${H(p.role||'')} ${p.company?'@ '+H(p.company):''}</div></div><span class="pill fresh">${H(p.relevance_score||p.score||'?')}</span></div><p>${H(p.reason||p.why||'')}</p>${p.url?`<a href="${H(p.url)}" target="_blank" class="tag blue">LinkedIn Profile</a>`:''}</div>`).join('')}</div>`;
+}
+
+function renderRuns(){
+  const runs=STATE.recent_runs||[];
+  document.getElementById('app').innerHTML=renderTop('runs')+`<div class="list">${runs.length?runs.map(run=>`<div class="item"><div class="item-head"><div><div class="item-title">${H(run.skill)} · ${H(run.status)}</div><div class="item-meta mono">${H(run.run_id)}</div></div><span class="pill ${run.status==='success'?'fresh':run.status==='failed'?'error':'stale'}">${H(run.status)}</span></div><p>${H((run.logs||[]).slice(-2).join('\\n'))}</p><div class="tags">${(run.warnings||[]).map(w=>`<span class="tag orange">${H(w)}</span>`).join('')}${(run.errors||[]).map(e=>`<span class="tag red">${H(e)}</span>`).join('')}</div></div>`).join(''):'<div class="empty">No runs yet.</div>'}</div>`;
+}
+
+loadState().catch(err=>{document.getElementById('app').innerHTML=`<div class="alert err">Could not load dashboard state: ${H(err.message)}</div>`});
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "akshay": {
+    "name": "Your Name",
+    "linkedin_url": "https://www.linkedin.com/in/your-slug/",
+    "current_company": "Your Company",
+    "role": "Senior Product Manager",
+    "baseline_score": 7.0,
+    "baseline_date": "2026-01-01"
+  },
+  "peers": {
+    "description": "PM profiles to benchmark against",
+    "profiles": [
+      {
+        "name": "Peer Name",
+        "company": "Company",
+        "role": "Lead PM",
+        "connections": 5000,
+        "followers": 5200,
+        "has_creator_mode": false,
+        "has_premium": true,
+        "priority": "high"
+      }
+    ]
+  },
+  "engagement_targets": {
+    "description": "People whose posts you comment on regularly",
+    "profiles": [
+      { "name": "Peer Name", "company": "Company", "reason": "Active poster, same market" }
+    ]
+  },
+  "fixed_anchors": {
+    "description": "Top LinkedIn influencers for content inspiration. Always scraped.",
+    "profiles": [
+      {
+        "name": "Lenny Rachitsky",
+        "url": "https://www.linkedin.com/in/lennyrachitsky/",
+        "niche": "product_management",
+        "reason": "Top PM newsletter author"
+      }
+    ]
+  },
+  "rotating_anchors": {
+    "description": "Discovered via scraping. System manages this list.",
+    "last_refreshed": null,
+    "profiles": []
+  },
+  "companies_to_watch": [
+    { "name": "Company Name", "linkedin_url": "https://www.linkedin.com/company/slug/" }
+  ]
+}

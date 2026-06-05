@@ -1,0 +1,103 @@
+{
+  "pillars": [
+    {
+      "id": "marketplace-ops",
+      "name": "Marketplace & Operations",
+      "description": "E-commerce marketplace building, fulfillment, last-mile delivery, seller management",
+      "topics": [
+        "Building marketplace trust loops",
+        "Fulfillment speed as a competitive moat",
+        "Seller vs buyer experience tradeoffs",
+        "GCC e-commerce vs global patterns",
+        "Last-mile delivery optimization"
+      ],
+      "hashtags": ["#ecommerce", "#marketplace", "#productmanagement", "#fulfillment"],
+      "frequency": "weekly",
+      "example_angles": [
+        "What I learned shipping [X] at Mumzworld",
+        "Why [metric] matters more than [vanity metric] in marketplaces",
+        "The real cost of free delivery in GCC"
+      ]
+    },
+    {
+      "id": "pm-craft",
+      "name": "PM Craft & Leadership",
+      "description": "Product management skills, frameworks, team dynamics, stakeholder management",
+      "topics": [
+        "PRD writing that engineers love",
+        "Sprint planning anti-patterns",
+        "Cross-functional alignment",
+        "Data-informed vs data-driven decisions",
+        "PM career growth in MENA"
+      ],
+      "hashtags": ["#productmanagement", "#PMlife", "#leadership", "#agile"],
+      "frequency": "weekly",
+      "example_angles": [
+        "A framework I use for [decision type]",
+        "The PM mistake I keep seeing in GCC startups",
+        "How I prioritize when everything is urgent"
+      ]
+    },
+    {
+      "id": "ai-product",
+      "name": "AI in Product",
+      "description": "AI/ML integration in products, LLMs, practical AI for PMs, not hype",
+      "topics": [
+        "AI features that actually ship vs demo-ware",
+        "LLM integration patterns for non-ML PMs",
+        "When NOT to use AI",
+        "AI product metrics that matter",
+        "Building AI tools as a non-developer PM"
+      ],
+      "hashtags": ["#AI", "#productmanagement", "#LLM", "#artificialintelligence"],
+      "frequency": "biweekly",
+      "example_angles": [
+        "I built [tool] with AI without writing code — here's what I learned",
+        "The AI feature our users actually wanted vs what we assumed",
+        "AI hype vs reality: a PM's field notes"
+      ]
+    },
+    {
+      "id": "gcc-tech",
+      "name": "GCC Tech Scene",
+      "description": "Middle East tech ecosystem, Dubai startup life, regional product challenges",
+      "topics": [
+        "GCC product challenges unique to the region",
+        "Arabic-first vs English-first product decisions",
+        "Working across India-GCC corridors",
+        "What global PMs don't understand about MENA",
+        "Dubai tech culture observations"
+      ],
+      "hashtags": ["#Dubai", "#MENA", "#GCC", "#startup", "#techindubai"],
+      "frequency": "biweekly",
+      "example_angles": [
+        "3 things that surprised me about building product in GCC",
+        "India to Dubai PM transition: honest take",
+        "Why GCC e-commerce is not just 'Amazon but Arabic'"
+      ]
+    }
+  ],
+  "content_rules": {
+    "cadence": "3-2-1",
+    "description": "Per 2-week cycle: 3 educational posts, 2 engagement/opinion posts, 1 personal/career story",
+    "posting_days": ["Monday", "Wednesday", "Friday"],
+    "best_times_dubai": ["07:30-08:30", "12:00-13:00"],
+    "max_chars": 1300,
+    "format_preferences": [
+      "Hook line (question or bold statement)",
+      "3-5 short paragraphs",
+      "Line breaks between every paragraph",
+      "End with question to drive comments",
+      "1-3 relevant hashtags at the end (not inline)"
+    ]
+  },
+  "anti_slop_rules": [
+    "NEVER use: 'In today's fast-paced world', 'Game-changer', 'Leverage', 'Synergy', 'Delighted to share', 'Thrilled to announce', 'It's not about X, it's about Y'",
+    "Every draft MUST have [INSERT YOUR REAL EXAMPLE HERE] placeholders",
+    "Claude REFUSES to generate 'finished' posts — only drafts requiring human editing",
+    "First-person voice. Short sentences. No corporate speak.",
+    "Comments: never 'Great post!' — always add unique perspective or question",
+    "No emoji walls. Max 2 emojis per post, and only if natural.",
+    "No 'I'm humbled' or 'I'm honored' unless genuinely appropriate"
+  ]
+}

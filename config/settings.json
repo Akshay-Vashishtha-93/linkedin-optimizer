@@ -1,0 +1,75 @@
+{
+  "budget": {
+    "monthly_cap_usd": 29.0,
+    "alert_at_pct": 80,
+    "note": "Live usage is fetched from Apify API. Static values are fallbacks only."
+  },
+  "cadence": {
+    "daily_engage": true,
+    "content_days": [
+      "Monday",
+      "Wednesday",
+      "Friday"
+    ],
+    "weekly_scorecard": "Sunday",
+    "weekly_watch": "Sunday",
+    "monthly_benchmark": "first_sunday",
+    "network_weeks": [
+      1,
+      3
+    ]
+  },
+  "apify": {
+    "actors": {
+      "profile_scraper": "harvestapi/linkedin-profile-scraper",
+      "profile_search": "harvestapi/linkedin-profile-search-by-name",
+      "post_search": "harvestapi/linkedin-post-search",
+      "profile_posts": "harvestapi/linkedin-profile-posts",
+      "creator_ranker": "scrapemint/linkedin-creator-ranker",
+      "job_scraper": "curious_coder/linkedin-jobs-scraper",
+      "job_scraper_fallback": "worldunboxer/rapid-linkedin-scraper",
+      "company_scraper": "harvestapi/linkedin-company"
+    },
+    "cost_per_run": {
+      "profile_scraper": 0.04,
+      "post_search": 0.1,
+      "profile_posts": 0.1,
+      "creator_ranker": 0.0,
+      "job_scraper": 0.001,
+      "job_scraper_fallback": 0.0009,
+      "company_scraper": 0.05
+    }
+  },
+  "anthropic": {
+    "model": "claude-haiku-4-5-20251001",
+    "env_var": "ANTHROPIC_API_KEY",
+    "note": "No API key is stored in project files. If the env var is missing, the dashboard falls back to deterministic evidence-based drafts."
+  },
+  "scoring": {
+    "overall_method": "equal_average_canonical_report_baseline",
+    "dimensions": [
+      "Headline & Positioning",
+      "About / Summary",
+      "Experience Detail",
+      "Metrics & Outcomes",
+      "Network Size",
+      "Content / Creator Presence",
+      "Premium / Verification",
+      "Skills & Endorsements",
+      "Education & Certifications",
+      "Industry Relevance"
+    ],
+    "weights": {
+      "content_presence": 2.0,
+      "metrics_outcomes": 1.5,
+      "network_size": 1.0,
+      "headline": 1.0,
+      "about": 1.0,
+      "experience": 1.0,
+      "premium": 0.5,
+      "skills": 0.5,
+      "education": 0.5,
+      "industry_relevance": 1.0
+    }
+  }
+}

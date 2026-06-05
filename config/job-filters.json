@@ -1,0 +1,45 @@
+{
+  "target_roles": [
+    "Senior Product Manager",
+    "Lead Product Manager",
+    "Principal Product Manager",
+    "Group Product Manager",
+    "Director of Product",
+    "Head of Product"
+  ],
+  "target_industries": [
+    "E-commerce / Marketplace",
+    "Fintech / BNPL",
+    "Super Apps",
+    "Food / Quick Commerce",
+    "Real Estate Tech",
+    "Logistics / Fulfillment"
+  ],
+  "target_locations": [
+    "Dubai",
+    "Abu Dhabi",
+    "UAE",
+    "Riyadh",
+    "Saudi Arabia",
+    "Remote (MENA)"
+  ],
+  "target_companies": [
+    "Noon", "Careem", "Talabat", "Tabby", "Property Finder",
+    "MAF / Majid Al Futtaim", "Amazon MENA", "Kitopi",
+    "Fetchr", "Postpay", "Tamara", "Floward", "Salla",
+    "Jahez", "HungerStation", "Deliveroo MENA"
+  ],
+  "keywords": [
+    "marketplace", "e-commerce", "fulfillment", "mobile",
+    "growth", "AI", "super app", "payments", "logistics"
+  ],
+  "exclude": [
+    "Intern", "Associate", "Junior", "Entry Level",
+    "UX Designer", "Engineer", "Data Analyst"
+  ],
+  "search_config": {
+    "max_results_per_scan": 25,
+    "freshness_days": 7,
+    "sort_by": "relevance"
+  }
+}

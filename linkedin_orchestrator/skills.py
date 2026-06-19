@@ -54,22 +54,27 @@ from .validators import (
 )
 
 
-URLS = {
-    "Sanket Purohit": "https://www.linkedin.com/in/sanketpurohit/",
-    "Diego Granados": "https://www.linkedin.com/in/diegogranados/",
-    "Sajjad Ahmad": "https://www.linkedin.com/in/sajjadahmadpm/",
-    "Raeesa Omar": "https://www.linkedin.com/in/raeesaomar/",
-    "Dharani Dharan G": "https://www.linkedin.com/in/dharanidharan/",
-    "Shradha Mohanan": "https://www.linkedin.com/in/shradhamohanan/",
-    "Akshay Vashishtha": "https://www.linkedin.com/in/akshay-vashishtha/",
-    "Lenny Rachitsky": "https://www.linkedin.com/in/lennyrachitsky/",
-    "Shreyas Doshi": "https://www.linkedin.com/in/shreyasdoshi/",
-    "Aatir Abdul Rauf": "https://www.linkedin.com/in/aatirabdulrauf/",
-    "Pawel Huryn": "https://www.linkedin.com/in/pawelhuryn/",
-    "Ethan Mollick": "https://www.linkedin.com/in/emollick/",
-    "Hussain Abbasi": "https://www.linkedin.com/in/hussainabbasi/",
-    "Pragya Pande": "https://www.linkedin.com/in/pragyapande/",
-}
+def _build_urls() -> Dict[str, str]:
+    """Build name → LinkedIn URL map from config/targets.json (gitignored).
+
+    Reads akshay + peers + engagement_targets + fixed_anchors + rotating_anchors
+    so the public repo stays free of real LinkedIn profile URLs.
+    """
+    targets = cfg("targets.json", {})
+    result: Dict[str, str] = {}
+    akshay = targets.get("akshay", {})
+    if akshay.get("name") and akshay.get("linkedin_url"):
+        result[akshay["name"]] = akshay["linkedin_url"]
+    for section in ("peers", "engagement_targets", "fixed_anchors", "rotating_anchors"):
+        for profile in targets.get(section, {}).get("profiles", []):
+            name = profile.get("name")
+            url = profile.get("url") or profile.get("linkedin_url")
+            if name and url:
+                result.setdefault(name, url)
+    return result
+
+
+URLS = _build_urls()
 
 
 def _anchor_urls() -> List[str]:
